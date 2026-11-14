@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useState, useEffect } from 'react';
 import { Slot, ThemeProvider } from 'expo-router';
 import { useColorScheme } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
@@ -44,6 +44,12 @@ export default function RootLayout() {
     },
   ]);
 
+  useEffect(() => {
+    if (fontError) {
+      console.warn('Could not load Montserrat:', fontError);
+    }
+  }, [fontError]);
+
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaProvider>
@@ -51,6 +57,8 @@ export default function RootLayout() {
           <Slot />
           {showSplash && (
             <SplashScreenView
+              canStart={fontsLoaded || !!fontError}
+              fontLoaded={fontsLoaded}
               onReady={handleSplashReady}
               onFinish={handleSplashFinish}
             />
