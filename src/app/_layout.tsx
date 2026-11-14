@@ -1,18 +1,63 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from 'expo-router';
-import * as SplashScreen from 'expo-splash-screen';
+import { useCallback, useState } from 'react';
+import { Slot, ThemeProvider } from 'expo-router';
 import { useColorScheme } from 'react-native';
+import { StatusBar } from 'expo-status-bar';
+import * as ExpoSplashScreen from 'expo-splash-screen';
+import { darkTheme, lightTheme } from '@/theme/colors';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { useFonts } from 'expo-font';
+import SplashScreenView from '@/screens/SplashScreen';
 
-import { AnimatedSplashOverlay } from '@/components/animated-icon';
-import AppTabs from '@/components/app-tabs';
+// Keep the native splash visible until the custom splash is ready.
+void ExpoSplashScreen.preventAutoHideAsync().catch(console.warn);
 
-SplashScreen.preventAutoHideAsync();
 
-export default function TabLayout() {
-  const colorScheme = useColorScheme();
+export default function RootLayout() {
+  const scheme = useColorScheme();
+  const theme = scheme === 'dark' ? darkTheme : lightTheme;
+  const [showSplash, setShowSplash] = useState(true);
+
+  const handleSplashReady = useCallback(() => {
+    ExpoSplashScreen.hide();
+  }, []);
+
+  const handleSplashFinish = useCallback(() => {
+    setShowSplash(false);
+  }, []);
+
+  const [fontsLoaded, fontError] = useFonts([
+    {
+      fontFamily: 'Montserrat',
+      fontDefinitions: [
+        {
+          path: require('@/assets/fonts/Montserrat-VariableFont_wght.ttf'),
+          weight: '100 900',
+          style: 'normal',
+        },
+        {
+          path: require('@/assets/fonts/Montserrat-Italic-VariableFont_wght.ttf'),
+          weight: '100 900',
+          style: 'italic',
+        },
+      ],
+    },
+  ]);
+
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <AnimatedSplashOverlay />
-      <AppTabs />
-    </ThemeProvider>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <SafeAreaProvider>
+        <ThemeProvider value={theme}>
+          <Slot />
+          {showSplash && (
+            <SplashScreenView
+              onReady={handleSplashReady}
+              onFinish={handleSplashFinish}
+            />
+          )}
+          <StatusBar style={showSplash || theme.dark ? 'light' : 'dark'} />
+        </ThemeProvider>
+      </SafeAreaProvider>
+    </GestureHandlerRootView>
   );
 }
