@@ -1,6 +1,8 @@
 import { StyleSheet, View, Pressable, Text } from 'react-native';
 import { SymbolView } from 'expo-symbols';
 
+import { useAppTheme } from '@/hooks/use-app-theme';
+
 type Props = {
   label: string;
   theme?: 'primary';
@@ -8,16 +10,23 @@ type Props = {
 };
 
 export default function Button({ label, theme, onPress }: Readonly<Props>) {
+  const { colors } = useAppTheme();
+
   if (theme === 'primary') {
     return (
       <View style={styles.buttonContainer}>
-        <Pressable style={[styles.button, styles.primaryButton]} onPress={onPress}>
+        <Pressable
+          style={[styles.button, { backgroundColor: colors.accent }]}
+          onPress={onPress}
+        >
           <SymbolView
             name={{ ios: 'photo', android: 'image', web: 'image' }}
             size={18}
-            tintColor="#25292e"
+            tintColor={colors.onAccent}
           />
-          <Text style={[styles.buttonLabel, { color: '#25292e' }]}>{label}</Text>
+          <Text style={[styles.buttonLabel, { color: colors.onAccent }]}>
+            {label}
+          </Text>
         </Pressable>
       </View>
     );
@@ -26,7 +35,7 @@ export default function Button({ label, theme, onPress }: Readonly<Props>) {
   return (
     <View style={styles.buttonContainer}>
       <Pressable style={styles.button} onPress={onPress}>
-        <Text style={styles.buttonLabel}>{label}</Text>
+        <Text style={[styles.buttonLabel, { color: colors.text }]}>{label}</Text>
       </Pressable>
     </View>
   );
@@ -48,11 +57,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     gap: 8,
   },
-  primaryButton: {
-    backgroundColor: '#ffd33d',
-  },
   buttonLabel: {
-    color: '#fff',
     fontSize: 16,
   },
 });

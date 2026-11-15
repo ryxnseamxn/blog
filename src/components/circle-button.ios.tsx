@@ -1,12 +1,21 @@
 import { StyleSheet, View } from 'react-native';
 import { Host, Button, Image } from '@expo/ui/swift-ui';
-import { background, buttonStyle, frame, shapes } from '@expo/ui/swift-ui/modifiers';
+import {
+  background,
+  buttonStyle,
+  frame,
+  shapes,
+} from '@expo/ui/swift-ui/modifiers';
+
+import { useAppTheme } from '@/hooks/use-app-theme';
 
 type Props = {
   onPress: () => void;
 };
 
 export default function CircleButton({ onPress }: Readonly<Props>) {
+  const { colors } = useAppTheme();
+
   return (
     <View style={styles.circleButtonContainer}>
       <Host matchContents>
@@ -14,8 +23,11 @@ export default function CircleButton({ onPress }: Readonly<Props>) {
           <Image
             systemName="plus"
             size={38}
-            color="#25292e"
-            modifiers={[frame({ width: 84, height: 84 }), background('#ffd33d', shapes.circle())]}
+            color={colors.onAccent}
+            modifiers={[
+              frame({ width: 84, height: 84 }),
+              background(colors.accent, shapes.circle()),
+            ]}
           />
         </Button>
       </Host>

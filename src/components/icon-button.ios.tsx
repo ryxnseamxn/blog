@@ -3,6 +3,8 @@ import { Host, Button, Image, Text, VStack } from '@expo/ui/swift-ui';
 import { buttonStyle, font, foregroundStyle } from '@expo/ui/swift-ui/modifiers';
 import type { AndroidSymbol, SFSymbol } from 'expo-symbols';
 
+import { useAppTheme } from '@/hooks/use-app-theme';
+
 type Props = {
   icon: {
     android: ImageSourcePropType;
@@ -13,10 +15,22 @@ type Props = {
   onPress: () => void;
 };
 
-export default function IconButton({ icon, label, onPress }: Readonly<Props>) {
+export default function IconButton({
+  icon,
+  label,
+  onPress,
+}: Readonly<Props>) {
+  const { colors } = useAppTheme();
+
   return (
     <Host matchContents>
-      <Button onPress={onPress} modifiers={[buttonStyle('plain'), foregroundStyle('#fff')]}>
+      <Button
+        onPress={onPress}
+        modifiers={[
+          buttonStyle('plain'),
+          foregroundStyle(colors.text),
+        ]}
+      >
         <VStack spacing={12}>
           <Image systemName={icon.ios} size={20} />
           <Text modifiers={[font({ size: 14 })]}>{label}</Text>

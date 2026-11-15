@@ -3,6 +3,7 @@ import { StyleSheet, Text, View } from 'react-native';
 
 import { BottomSheet, RNHostView } from '@expo/ui';
 
+import { useAppTheme } from '@/hooks/use-app-theme';
 
 type Props = PropsWithChildren<{
   isVisible: boolean;
@@ -10,15 +11,17 @@ type Props = PropsWithChildren<{
 }>;
 
 export default function EmojiPicker({ isVisible, children, onClose }: Props) {
+  const { colors } = useAppTheme();
+
   return (
     <BottomSheet
       isPresented={isVisible}
       onDismiss={onClose}
       snapPoints={['half']}
-      containerColor="#25292e">
+      containerColor={colors.card}>
       <RNHostView>
         <View>
-          <Text style={styles.title}>Choose a sticker</Text>
+          <Text style={[styles.title, { color: colors.text }]}>Choose a sticker</Text>
           {children}
         </View>
       </RNHostView>
@@ -28,7 +31,6 @@ export default function EmojiPicker({ isVisible, children, onClose }: Props) {
 
 const styles = StyleSheet.create({
   title: {
-    color: '#fff',
     fontSize: 16,
     marginBottom: 20,
   },

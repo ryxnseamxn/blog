@@ -4,13 +4,16 @@ import {
   useId,
   useRef,
   useState,
+  type CSSProperties,
   type KeyboardEvent,
   type ReactElement,
   type ReactNode,
-} from "react";
-import HeaderCollapsible from "./header-collapsible";
+} from 'react';
+import { View, StyleSheet } from 'react-native';
+import HeaderCollapsible from './header-collapsible';
 
-// Keep this web entry point independent of the native pager dependency.
+import { useAppTheme } from '@/hooks/use-app-theme';
+
 type ScreenProps = {
   name: string;
   label?: string;
@@ -22,6 +25,8 @@ function Screen(_props: ScreenProps) {
 }
 
 function TabsCollapsible({ children }: Readonly<{ children: ReactNode }>) {
+  const { colors } = useAppTheme();
+
   const screens = Children.toArray(children).filter(
     (child): child is ReactElement<ScreenProps> =>
       isValidElement(child) && child.type === Screen
@@ -36,16 +41,16 @@ function TabsCollapsible({ children }: Readonly<{ children: ReactNode }>) {
   function handleKeyDown(event: KeyboardEvent<HTMLButtonElement>, index: number) {
     let nextIndex: number;
     switch (event.key) {
-      case "ArrowRight":
+      case 'ArrowRight':
         nextIndex = (index + 1) % screens.length;
         break;
-      case "ArrowLeft":
+      case 'ArrowLeft':
         nextIndex = (index - 1 + screens.length) % screens.length;
         break;
-      case "Home":
+      case 'Home':
         nextIndex = 0;
         break;
-      case "End":
+      case 'End':
         nextIndex = screens.length - 1;
         break;
       default:
@@ -56,47 +61,95 @@ function TabsCollapsible({ children }: Readonly<{ children: ReactNode }>) {
     buttons.current[nextIndex]?.focus({ preventScroll: true });
   }
 
+  const tabBase: CSSProperties = {
+    minWidth: 88,
+    flex: 1,
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: '0 20px',
+    borderBottomWidth: 3,
+    borderBottomStyle: 'solid',
+    borderBottomColor: 'transparent',
+    background: 'none',
+    cursor: 'pointer',
+  };
+
   return (
-    <div className="h-dvh min-h-0 overflow-y-auto bg-white text-neutral-900">
-      <header>
+    <View style={[styles.root, { backgroundColor: colors.background }]}>
+      <header style={styles.header}>
         <HeaderCollapsible />
       </header>
-      <div className="sticky top-0 z-10 flex h-12 overflow-x-auto bg-white shadow-[0_1px_0_#ddd]" role="tablist" aria-label="Profile sections">
-        {screens.map(({ props }, index) => (
-          <button
+      <View style={[styles.tablist, { backgroundColor: colors.background }]} role="tablist" aria-label="Profile sections">
+        {screens.map(({ props }, index) => {
+          const selected = props.name === activeName;
+          const tabStyle: CSSProperties = {
+            ...tabBase,
+            borderBottomColor: selected ? colors.primary : 'transparent',
+            color: selected ? colors.primary : colors.mutedText,
+          };
+          return (
+            <button
+              key={props.name}
+              ref={(button) => { buttons.current[index] = button; }}
+              style={tabStyle}
+              type="button"
+              role="tab"
+              id={`${id}-tab-${index}`}
+              aria-controls={`${id}-panel-${index}`}
+              aria-selected={selected}
+              tabIndex={selected ? 0 : -1}
+              onClick={() => setSelectedName(props.name)}
+              onKeyDown={(event) => handleKeyDown(event, index)}
+            >
+              {props.label ?? props.name}
+            </button>
+          );
+        })}
+      </View>
+      {screens
+        .filter(({ props }) => props.name === activeName)
+        .map(({ props }, index) => (
+          <View
             key={props.name}
-            ref={(button) => { buttons.current[index] = button; }}
-            className="min-w-[88px] flex-[1_0_auto] cursor-pointer border-0 border-b-[3px] border-solid border-transparent bg-transparent px-5 font-semibold text-neutral-600 outline-offset-[-4px] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#007aff] aria-selected:border-b-[#007aff] aria-selected:text-[#007aff]"
-            type="button"
-            role="tab"
-            id={`${id}-tab-${index}`}
-            aria-controls={`${id}-panel-${index}`}
-            aria-selected={props.name === activeName}
-            tabIndex={props.name === activeName ? 0 : -1}
-            onClick={() => setSelectedName(props.name)}
-            onKeyDown={(event) => handleKeyDown(event, index)}
+            style={[styles.panel, { flex: 1 }]}
+            role="tabpanel"
+            id={`${id}-panel-${index}`}
+            aria-labelledby={`${id}-tab-${index}`}
           >
-            {props.label ?? props.name}
-          </button>
+            {props.children}
+          </View>
         ))}
-      </div>
-      {/* Keep panels mounted so switching tabs preserves their local state. */}
-      {screens.map(({ props }, index) => (
-        <section
-          key={props.name}
-          className="box-border min-h-[calc(100dvh-3rem)] outline-offset-[-4px] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#007aff]"
-          role="tabpanel"
-          id={`${id}-panel-${index}`}
-          aria-labelledby={`${id}-tab-${index}`}
-          hidden={props.name !== activeName}
-          tabIndex={0}
-        >
-          {props.children}
-        </section>
-      ))}
-    </div>
+    </View>
   );
 }
+
+const styles = StyleSheet.create({
+  root: {
+    width: '100%',
+    height: '100dvh',
+    minHeight: 0,
+    overflow: 'hidden',
+    color: '#171717',
+  },
+  header: {
+    padding: 20,
+  },
+  tablist: {
+    position: 'sticky',
+    top: 0,
+    zIndex: 10,
+    flexDirection: 'row',
+    overflowX: 'hidden',
+    overflow: 'hidden',
+    borderBottomWidth: 1,
+    borderBottomColor: '#ddd',
+  },
+  panel: {
+    minHeight: 'calc(100dvh - 3rem)',
+  },
+});
 
 TabsCollapsible.Screen = Screen;
 

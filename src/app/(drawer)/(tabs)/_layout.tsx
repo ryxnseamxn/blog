@@ -11,7 +11,7 @@ const TABS = [
 ];
 
 export default function TabsLayout() {
-  const { colors, dark } = useAppTheme();
+  const { colors, dark, fonts } = useAppTheme();
 
   return (
     <Tabs
@@ -30,8 +30,8 @@ export default function TabsLayout() {
         tabBarActiveTintColor: colors.tabBarActive,
         tabBarInactiveTintColor: colors.tabBarInactive,
         tabBarLabelStyle: {
+          ...fonts.regular,
           fontSize: 10,
-          fontWeight: '400',
           letterSpacing: 0.1,
         },
       }}

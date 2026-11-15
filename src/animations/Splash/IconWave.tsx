@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { StyleSheet } from 'react-native';
 import Animated, {
   cancelAnimation,
@@ -31,8 +31,17 @@ export function IconWave({
   onFinish,
 }: Readonly<IconWaveProps>) {
   const opacity = useSharedValue(1);
+  const [waveDone, setWaveDone] = useState(false);
 
+  // Icons call back when their wave finishes; the last icon's completion
+  // flips this flag, which triggers the fade-out in the effect below.
   const handleWaveFinish = useCallback(() => {
+    setWaveDone(true);
+  }, []);
+
+  useEffect(() => {
+    if (!waveDone) return;
+
     opacity.value = withTiming(
       0,
       { duration: FADE_OUT_DURATION },
@@ -42,11 +51,9 @@ export function IconWave({
         }
       },
     );
-  }, [onFinish, opacity]);
 
-  useEffect(() => {
     return () => cancelAnimation(opacity);
-  }, [opacity]);
+  }, [waveDone, onFinish, opacity]);
 
   const animatedStyle = useAnimatedStyle(() => ({
     opacity: opacity.value,
@@ -60,11 +67,7 @@ export function IconWave({
           source={image.src}
           delay={index * ICON_STAGGER}
           playing={playing}
-          onFinish={
-            index === images.length - 1
-              ? handleWaveFinish
-              : undefined
-          }
+          onFinish={index === images.length - 1 ? handleWaveFinish : undefined}
         />
       ))}
     </Animated.View>

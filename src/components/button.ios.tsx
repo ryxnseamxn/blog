@@ -1,8 +1,14 @@
 import { StyleSheet, View } from 'react-native';
 
 import { Host, Button as SwiftUIButton } from '@expo/ui/swift-ui';
-import { buttonStyle, controlSize, foregroundStyle, tint } from '@expo/ui/swift-ui/modifiers';
+import {
+  buttonStyle,
+  controlSize,
+  foregroundStyle,
+  tint,
+} from '@expo/ui/swift-ui/modifiers';
 
+import { useAppTheme } from '@/hooks/use-app-theme';
 
 type Props = {
   label: string;
@@ -11,6 +17,8 @@ type Props = {
 };
 
 export default function Button({ label, theme, onPress }: Readonly<Props>) {
+  const { colors } = useAppTheme();
+
   if (theme === 'primary') {
     return (
       <View style={styles.buttonContainer}>
@@ -22,8 +30,8 @@ export default function Button({ label, theme, onPress }: Readonly<Props>) {
             modifiers={[
               buttonStyle('borderedProminent'),
               controlSize('large'),
-              tint('#ffd33d'),
-              foregroundStyle('#25292e'),
+              tint(colors.accent),
+              foregroundStyle(colors.onAccent),
             ]}
           />
         </Host>
@@ -37,7 +45,11 @@ export default function Button({ label, theme, onPress }: Readonly<Props>) {
         <SwiftUIButton
           label={label}
           onPress={onPress}
-          modifiers={[buttonStyle('borderless'), controlSize('large'), foregroundStyle('#fff')]}
+          modifiers={[
+            buttonStyle('borderless'),
+            controlSize('large'),
+            foregroundStyle(colors.text),
+          ]}
         />
       </Host>
     </View>

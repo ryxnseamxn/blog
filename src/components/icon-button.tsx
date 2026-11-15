@@ -1,6 +1,8 @@
 import { Pressable, StyleSheet, Text, type ImageSourcePropType } from 'react-native';
 import { SymbolView, type AndroidSymbol, type SFSymbol } from 'expo-symbols';
 
+import { useAppTheme } from '@/hooks/use-app-theme';
+
 type Props = {
   icon: {
     android: ImageSourcePropType;
@@ -11,11 +13,17 @@ type Props = {
   onPress: () => void;
 };
 
-export default function IconButton({ icon, label, onPress }: Readonly<Props>) {
+export default function IconButton({
+  icon,
+  label,
+  onPress,
+}: Readonly<Props>) {
+  const { colors } = useAppTheme();
+
   return (
     <Pressable style={styles.iconButton} onPress={onPress}>
-      <SymbolView name={{ web: icon.web }} size={24} tintColor="#fff" />
-      <Text style={styles.iconButtonLabel}>{label}</Text>
+      <SymbolView name={{ web: icon.web }} size={24} tintColor={colors.text} />
+      <Text style={[styles.iconButtonLabel, { color: colors.text }]}>{label}</Text>
     </Pressable>
   );
 }
@@ -26,7 +34,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   iconButtonLabel: {
-    color: '#fff',
     marginTop: 12,
   },
 });

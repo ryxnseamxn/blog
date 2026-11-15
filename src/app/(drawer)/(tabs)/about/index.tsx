@@ -1,23 +1,24 @@
-import { Text, View, StyleSheet } from 'react-native';
+import { StyleSheet, View } from 'react-native';
+
+import { AppText } from '@/components/AppText';
+import { useAppTheme } from '@/hooks/use-app-theme';
 
 export default function AboutScreen() {
+  const { colors } = useAppTheme();
+
   return (
-    <View className="flex-1 items-center justify-center bg-white">
-      <Text className="text-xl font-bold text-blue-500">
-        Welcome to Nativewind!
-      </Text>
-    </View> 
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
+      <AppText style={{ fontSize: 28, fontWeight: '700' }}>
+        About
+      </AppText>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#25292e',
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  text: {
-    color: '#fff',
   },
 });

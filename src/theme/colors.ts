@@ -30,6 +30,10 @@ export const palette = {
   neutral900: '#171717',
   white: '#ffffff',
   black: '#000000',
+  accent: '#ffd33d',
+  onAccent: '#25292e',
+  danger: '#f43f5e',
+  mutedText: '#6b7280',
 };
 
 export const lightTheme = {
@@ -38,13 +42,17 @@ export const lightTheme = {
   colors: {
     ...DefaultTheme.colors,
     card: '#ffffff',
-    background: '#f8f8fc',
+    background: '#895129',
     surface: '#ffffff',
-    primary: palette.indigo500,
-    tabBarActive: palette.indigo500,
+    primary: '#895129',
+    tabBarActive: '#242B32',
     tabBarInactive: '#b0b0c8',
-    drawerBackground: '#ffffff',
+    drawerBackground: '#242B32',
     text: '#1a1a2e',
+    accent: '#242B32',
+    onAccent: '#242B32',
+    danger: '#242B32',
+    mutedText: '#242B32',
   },
 };
 
@@ -56,12 +64,16 @@ export const darkTheme: AppTheme = {
   colors: {
     ...DarkTheme.colors,
     card: '#1a1a2e',
-    background: '#0f0f1a',
-    surface: '#1a1a2e',
-    primary: palette.indigo400,
-    tabBarActive: palette.indigo400,
-    tabBarInactive: '#4a4a6a',
-    drawerBackground: '#13131f',
+    background: '#181D21',
+    surface: '#242B32',
+    primary: '#242B32',
+    tabBarActive: '#6D7A96',
+    tabBarInactive: '#6D8896',
+    drawerBackground: '#242B32',
     text: '#eeeeff',
+    accent: '#242B32',
+    onAccent: '#242B32',
+    danger: '#242B32',
+    mutedText: '#242B32',
   },
 };
