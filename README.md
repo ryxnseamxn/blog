@@ -2,6 +2,54 @@
 
 This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
 
+## Running everything
+
+With the API repo checked out next to this one (`../friendsgiving-api`):
+
+```bash
+cp .env.example .env          # optional; every value has a local default
+docker compose up --build
+```
+
+| Service | URL |
+|---------|-----|
+| App (Expo dev server, web) | http://localhost:8081 |
+| API | http://localhost:5080 |
+| Postgres | `localhost:5433`, user/password/db all `friendsgiving` |
+
+The source is bind-mounted, so edits hot-reload. After changing `package.json`, rebuild and drop the old `node_modules` volume with `docker compose up --build -V`.
+
+To use a physical phone with Expo Go, set `LAN_IP` and `EXPO_PUBLIC_API_BASE_URL=http://<LAN_IP>:5080` in `.env`.
+
+## Deploying the web app (EAS Hosting)
+
+The API runs on Railway (see `../friendsgiving-api`). The web app is hosted on EAS Hosting at `https://<slug>.expo.app`.
+
+**Easiest:** run `./scripts/deploy.zsh`. It walks you through everything below and the Railway setup, checking each step and skipping what's already done. Re-run it any time.
+
+Manual steps, if you'd rather:
+
+One-time setup:
+
+```bash
+npm install --global eas-cli
+eas login
+eas init                                        # links this app to an Expo project (fills in projectId)
+eas env:set --environment production --visibility plaintext \
+  --name EXPO_PUBLIC_API_BASE_URL --value https://<your-api>.up.railway.app
+eas env:set --environment production --visibility plaintext \
+  --name EXPO_PUBLIC_APP_URL --value https://<slug>.expo.app
+npm run deploy:web                              # first deploy; pick the subdomain when prompted
+```
+
+After that, `.eas/workflows/deploy-web.yml` redeploys on every push to `master` (connect the GitHub repo under the project's settings on expo.dev). `npm run deploy:web` deploys manually. `EXPO_PUBLIC_*` values are baked in at export time, so changing one needs a redeploy.
+
+The app exports as a single-page app (`web.output: "single"`). After the first deploy, open a `/friendsgiving/<id>` link directly to confirm EAS Hosting serves deep links. If it 404s, switch `web.output` to `"static"`.
+
+## Friendsgiving
+
+Guests open `/friendsgiving/<gatheringId>` to claim dishes. Hosts manage gatherings from **Admin** in the drawer (`/admin`). If the API sets `Admin:ApiKey`, the admin screen asks for that key and remembers it on the device.
+
 ## Get started
 
 1. Install dependencies
@@ -24,16 +72,6 @@ In the output, you'll find options to open the app in a
 - [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
 
 You can start developing by editing the files inside the **src/app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
-```
-
-This command will move the starter code to the **example** directory and create a blank **src/app** directory where you can start developing.
 
 ### Other setup steps
 

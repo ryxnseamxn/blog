@@ -1,4 +1,4 @@
-import { DarkTheme, DefaultTheme } from 'expo-router';
+import { DarkTheme } from 'expo-router';
 
 const appFonts = {
   regular: {
@@ -19,61 +19,30 @@ const appFonts = {
   },
 };
 
-export const palette = {
-  indigo50: '#eef2ff',
-  indigo100: '#e0e7ff',
-  indigo400: '#818cf8',
-  indigo500: '#6366f1',
-  indigo600: '#4f46e5',
-  indigo700: '#4338ca',
-  neutral50: '#fafafa',
-  neutral900: '#171717',
-  white: '#ffffff',
-  black: '#000000',
-  accent: '#ffd33d',
-  onAccent: '#25292e',
-  danger: '#f43f5e',
-  mutedText: '#6b7280',
-};
-
-export const lightTheme = {
-  ...DefaultTheme,
-  fonts: appFonts,
-  colors: {
-    ...DefaultTheme.colors,
-    card: '#ffffff',
-    background: '#895129',
-    surface: '#ffffff',
-    primary: '#895129',
-    tabBarActive: '#242B32',
-    tabBarInactive: '#b0b0c8',
-    drawerBackground: '#242B32',
-    text: '#1a1a2e',
-    accent: '#242B32',
-    onAccent: '#242B32',
-    danger: '#242B32',
-    mutedText: '#242B32',
-  },
-};
-
-export type AppTheme = typeof lightTheme;
-
-export const darkTheme: AppTheme = {
+// Cosy dark earth tones: espresso backgrounds, cream text, terracotta and honey accents.
+export const theme = {
   ...DarkTheme,
   fonts: appFonts,
   colors: {
     ...DarkTheme.colors,
-    card: '#1a1a2e',
-    background: '#181D21',
-    surface: '#242B32',
-    primary: '#242B32',
-    tabBarActive: '#6D7A96',
-    tabBarInactive: '#6D8896',
-    drawerBackground: '#242B32',
-    text: '#eeeeff',
-    accent: '#242B32',
-    onAccent: '#242B32',
-    danger: '#242B32',
-    mutedText: '#242B32',
+    background: '#1E1713',
+    surface: '#2A201A',
+    card: '#33271F',
+    border: '#4A3A2E',
+    text: '#F4E8DA',
+    mutedText: '#B5A08A',
+    primary: '#D4895A',
+    onPrimary: '#1E1713',
+    accent: '#E9B872',
+    onAccent: '#1E1713',
+    success: '#9CB380',
+    danger: '#E07A62',
+    notification: '#E07A62',
+    tabBarActive: '#E9B872',
+    tabBarInactive: '#7D6757',
+    drawerBackground: '#2A201A',
+    drawerText: '#F4E8DA',
   },
 };
+
+export type AppTheme = typeof theme;

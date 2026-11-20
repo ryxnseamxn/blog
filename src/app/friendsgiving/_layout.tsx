@@ -1,14 +1,17 @@
 import { Stack } from 'expo-router';
 
+import { useAppTheme } from '@/hooks/use-app-theme';
+
 export default function FriendsgivingLayout() {
+  const { colors } = useAppTheme();
+
   return (
     <Stack
       screenOptions={{
-        headerShown: false,
-        contentStyle: { backgroundColor: '#FFF8F0' },
+        headerStyle: { backgroundColor: colors.surface },
+        headerTintColor: colors.text,
+        contentStyle: { backgroundColor: colors.background },
       }}
-    >
-      <Stack.Screen name="[gatheringId]" />
-    </Stack>
+    />
   );
 }

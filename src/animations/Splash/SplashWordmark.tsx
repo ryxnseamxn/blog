@@ -10,6 +10,8 @@ import Animated, {
 } from 'react-native-reanimated';
 import { scheduleOnRN } from 'react-native-worklets';
 
+import { theme } from '@/theme/colors';
+
 const FADE_IN_DURATION = 500;
 const HOLD_DURATION = 500;
 const FADE_OUT_DURATION = 500;
@@ -77,7 +79,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   text: {
-    color: '#ffffff',
+    color: theme.colors.text,
     fontSize: 32,
     fontWeight: '600',
     letterSpacing: 2,

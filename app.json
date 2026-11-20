@@ -6,12 +6,9 @@
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "blog",
-    "userInterfaceStyle": "automatic",
+    "userInterfaceStyle": "dark",
     "updates": {
-      "url": "https://u.expo.dev/placeholder",
-      "runtimeVersion": {
-        "policy": "sdkVersion"
-      }
+      "url": "https://u.expo.dev/placeholder"
     },
     "ios": {
       "icon": "./assets/expo.icon"
@@ -30,8 +27,9 @@
       "favicon": "./assets/images/favicon.png",
       "bundler": "metro"
     },
-    "env": {
-      "EXPO_PUBLIC_API_BASE_URL": "http://10.0.2.2:5000"
+    "backgroundColor": "#1E1713",
+    "runtimeVersion": {
+      "policy": "sdkVersion"
     }
   }
 }

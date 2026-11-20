@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 
 import { SplashAnimation } from '@/animations/Splash/Splash';
+import { theme } from '@/theme/colors';
 
 type SplashScreenProps = {
   canStart: boolean;
@@ -53,7 +54,7 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     zIndex: 100,
-    backgroundColor: '#25292e',
+    backgroundColor: theme.colors.background,
     alignItems: 'center',
     justifyContent: 'center',
   },

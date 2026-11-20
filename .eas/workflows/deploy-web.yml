@@ -1,0 +1,15 @@
+# Deploys the web app to EAS Hosting production on every push to master.
+# Uses the EAS "production" environment variables (EXPO_PUBLIC_API_BASE_URL, EXPO_PUBLIC_APP_URL).
+name: Deploy web
+
+on:
+  push:
+    branches: ['master']
+
+jobs:
+  deploy:
+    type: deploy
+    name: Deploy web
+    environment: production
+    params:
+      prod: true

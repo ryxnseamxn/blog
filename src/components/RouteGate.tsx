@@ -1,11 +1,11 @@
 import React from 'react';
 import { Redirect } from 'expo-router';
 
-import { isRouteEnabled } from '@/config/feature-flags';
+import { isRouteEnabled, type FlaggedRoute } from '@/config/feature-flags';
 
 interface RouteGateProps {
   /** The route path this screen represents, e.g. '/about'. */
-  route: string;
+  route: FlaggedRoute;
   /** Where to send users when the route is disabled. Defaults to '/'. */
   redirectTo?: string;
   children: React.ReactNode;

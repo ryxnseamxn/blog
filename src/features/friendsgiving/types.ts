@@ -1,75 +1,49 @@
-/**
- * Friendsgiving feature types
- * Shaped for the .NET/Postgres API
- */
+// Mirrors Friendsgiving.Api/Contracts/Dtos.cs.
 
-export interface Gathering {
-  id: string;
-  name: string;
-  date: string; // ISO date string
-  hostName: string;
-  location?: string;
+export const DISH_CATEGORIES = ['main', 'side', 'appetizer', 'dessert', 'drink', 'other'] as const;
+
+export type DishCategory = (typeof DISH_CATEGORIES)[number];
+
+export interface Claim {
+  guestName: string;
+  note: string | null;
+  claimedAt: string;
 }
 
 export interface DishItem {
   id: string;
-  gatheringId: string;
   name: string;
   category: DishCategory;
   emoji: string;
-  claimedBy: string | null; // guest name, or null if unclaimed
-  isClaimed: boolean;
-  claimedAt: string | null; // ISO date string
-  isCustom: boolean; // true = added by a guest, false = pre-seeded
+  isCustom: boolean;
   sortOrder: number;
+  claim: Claim | null;
 }
 
-export interface Claim {
+export interface Gathering {
   id: string;
-  dishItemId: string;
-  guestName: string;
-  claimedAt: string; // ISO date string
-  note?: string;
-}
-
-export type DishCategory =
-  | 'main'
-  | 'side'
-  | 'dessert'
-  | 'drink'
-  | 'appetizer'
-  | 'other';
-
-export interface GatheringWithItems extends Gathering {
-  items: DishItem[];
-}
-
-// Request/response shapes matching future API
-export interface CreateGatheringRequest {
   name: string;
   date: string;
   hostName: string;
-  location?: string;
+  location: string | null;
+  items: DishItem[];
 }
 
-export interface ClaimItemRequest {
-  guestName: string;
-  note?: string;
+export interface GatheringSummary extends Omit<Gathering, 'items'> {
+  itemCount: number;
+  claimedCount: number;
 }
 
-export interface AddItemRequest {
+export interface GatheringInput {
+  name: string;
+  date: string;
+  hostName: string;
+  location: string | null;
+}
+
+export interface NewDish {
   name: string;
   category: DishCategory;
   emoji: string;
-}
-
-export interface UpdateGuestNameRequest {
-  guestName: string;
-}
-
-// Local storage shape (per device, per gathering)
-export interface LocalGuestState {
-  guestName: string;
-  claimedDishIds: string[];
-  addedDishIds: string[];
+  claimedBy?: string;
 }

@@ -1,9 +1,8 @@
 import { useCallback, useState, useEffect } from 'react';
 import { Slot, ThemeProvider } from 'expo-router';
-import { useColorScheme } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import * as ExpoSplashScreen from 'expo-splash-screen';
-import { darkTheme, lightTheme } from '@/theme/colors';
+import { theme } from '@/theme/colors';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { useFonts } from 'expo-font';
@@ -14,8 +13,6 @@ void ExpoSplashScreen.preventAutoHideAsync().catch(console.warn);
 
 
 export default function RootLayout() {
-  const scheme = useColorScheme();
-  const theme = scheme === 'dark' ? darkTheme : lightTheme;
   const [showSplash, setShowSplash] = useState(true);
 
   const handleSplashReady = useCallback(() => {
@@ -63,7 +60,7 @@ export default function RootLayout() {
               onFinish={handleSplashFinish}
             />
           )}
-          <StatusBar style={showSplash || theme.dark ? 'light' : 'dark'} />
+          <StatusBar style="light" />
         </ThemeProvider>
       </SafeAreaProvider>
     </GestureHandlerRootView>

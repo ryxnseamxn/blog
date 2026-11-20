@@ -19,25 +19,10 @@ const TABS = [
     activeIcon: 'compass',
     route: '/about',
   },
-  // {
-  //   name: 'notifications',
-  //   title: 'Notifications',
-  //   icon: 'notifications-outline',
-  //   activeIcon: 'notifications',
-  //   badge: true,
-  //   route: '/notifications',
-  // },
-  // {
-  //   name: 'profile',
-  //   title: 'Profile',
-  //   icon: 'person-outline',
-  //   activeIcon: 'person',
-  //   route: '/profile',
-  // },
-];
+] as const;
 
 export default function TabsLayout() {
-  const { colors, dark, fonts } = useAppTheme();
+  const { colors, fonts } = useAppTheme();
 
   const enabledTabs = TABS.filter((tab) => isRouteEnabled(tab.route));
 
@@ -50,9 +35,9 @@ export default function TabsLayout() {
           borderTopWidth: 0.5,
           borderTopColor: colors.border,
           elevation: 0,
-          shadowColor: dark ? '#000' : '#6060aa',
+          shadowColor: '#000',
           shadowOffset: { width: 0, height: -2 },
-          shadowOpacity: dark ? 0.3 : 0.06,
+          shadowOpacity: 0.3,
           shadowRadius: 12,
         },
         tabBarActiveTintColor: colors.tabBarActive,

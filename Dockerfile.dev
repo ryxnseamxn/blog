@@ -1,0 +1,7 @@
+# Expo dev server for compose.yaml. Source is bind-mounted at runtime for hot reload.
+FROM node:24-slim
+WORKDIR /app
+COPY package.json package-lock.json ./
+RUN npm ci
+EXPOSE 8081
+CMD ["npx", "expo", "start", "--port", "8081"]
