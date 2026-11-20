@@ -1,3 +1,5 @@
+import RouteGate from '@/components/RouteGate';
+
 export default function Index() {
-  return null;
+  return <RouteGate route="/">null</RouteGate>;
 }
