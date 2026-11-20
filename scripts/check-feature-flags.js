@@ -17,6 +17,8 @@ const __dirname = path.dirname(scriptPath);
 // Special routes that are not user screens (excluded from 1:1 check)
 const SPECIAL_ROUTES = new Set([
   '/_sitemap',
+  '/friendsgiving/[gatheringId]',
+  '/friendsgiving/',
 ]);
 
 // --- Parse FEATURE_FLAGS keys from source ---
