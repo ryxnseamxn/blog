@@ -9,6 +9,7 @@ import { CATEGORY_DETAILS } from '../categories';
 import { DishForm } from '../components/DishForm';
 import { DishRow } from '../components/DishRow';
 import type { DishCategory, Gathering, NewDish } from '../types';
+import { AllergyList } from './AllergyList';
 
 interface Props {
   gathering: Gathering;
@@ -41,6 +42,8 @@ export function DishStep({ gathering, category, onClaim, onAdd, onBack }: Props)
       <Card title={`Bringing your own ${label.toLowerCase()}?`}>
         <DishForm category={category} submitLabel="Add & claim it" onSubmit={onAdd} />
       </Card>
+
+      <AllergyList allergies={gathering.allergies} />
 
       <Button label="← Pick a different category" variant="secondary" onPress={onBack} />
     </View>

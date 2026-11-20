@@ -5,8 +5,9 @@ import Animated, { FadeInDown } from 'react-native-reanimated';
 import { Button } from '@/components/ui/Button';
 import { ErrorBanner } from '@/components/ui/ErrorBanner';
 import { useAppTheme } from '@/hooks/use-app-theme';
-import { addDish, claimDish, unclaimDish } from '../api';
+import { addDish, claimDish, saveAllergies, unclaimDish } from '../api';
 import type { Gathering, NewDish } from '../types';
+import { AllergyStep } from './AllergyStep';
 import { CategoryStep } from './CategoryStep';
 import { DishStep } from './DishStep';
 import { GatheringHeader } from './GatheringHeader';
@@ -37,6 +38,7 @@ export function GuestWizard({ gathering, guestName, onNameChange, mutate, error,
     return saved;
   };
   const unclaim = (dishId: string) => mutate(() => unclaimDish(gathering.id, dishId));
+  const shareAllergies = (details: string | null) => mutate(() => saveAllergies(gathering.id, guestName, details));
 
   return (
     <ScrollView style={{ backgroundColor: colors.background }} contentContainerStyle={styles.content}>
@@ -47,6 +49,7 @@ export function GuestWizard({ gathering, guestName, onNameChange, mutate, error,
       {/* Keyed by step so each step springs in fresh. No exit animation: on web it would briefly stack both steps. */}
       <Animated.View key={stepKey(step)} entering={FadeInDown.springify()}>
         {step.name === 'name' ? <NameStep onSubmit={onNameChange} /> : null}
+        {step.name === 'allergies' ? <AllergyStep guestName={guestName} onSubmit={shareAllergies} /> : null}
         {step.name === 'category' ? (
           <CategoryStep
             gathering={gathering}

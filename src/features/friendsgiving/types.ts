@@ -10,6 +10,12 @@ export interface Claim {
   claimedAt: string;
 }
 
+export interface Allergy {
+  guestName: string;
+  /** Null when the guest answered that they have none. */
+  details: string | null;
+}
+
 export interface DishItem {
   id: string;
   name: string;
@@ -27,9 +33,10 @@ export interface Gathering {
   hostName: string;
   location: string | null;
   items: DishItem[];
+  allergies: Allergy[];
 }
 
-export interface GatheringSummary extends Omit<Gathering, 'items'> {
+export interface GatheringSummary extends Omit<Gathering, 'items' | 'allergies'> {
   itemCount: number;
   claimedCount: number;
 }

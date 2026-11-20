@@ -14,3 +14,6 @@ export const claimDish = (gatheringId: string, dishId: string, guestName: string
 
 export const unclaimDish = (gatheringId: string, dishId: string) =>
   request<Gathering>(claimPath(gatheringId, dishId), { method: 'DELETE' });
+
+export const saveAllergies = (gatheringId: string, guestName: string, details: string | null) =>
+  request<Gathering>(`${gatheringPath(gatheringId)}/allergies`, { method: 'PUT', body: { guestName, details } });

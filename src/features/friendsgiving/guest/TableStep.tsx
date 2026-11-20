@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { useAppTheme } from '@/hooks/use-app-theme';
 import type { DishItem, Gathering } from '../types';
+import { AllergyList } from './AllergyList';
 import { ClaimedList } from './ClaimedList';
 
 interface Props {
@@ -43,6 +44,8 @@ export function TableStep({ gathering, myDishes, onUnclaim, onAddAnother }: Prop
           </AppText>
         ) : null}
       </Card>
+
+      <AllergyList allergies={gathering.allergies} />
 
       <Button label="Bring something else too" variant="secondary" onPress={onAddAnother} />
     </View>
