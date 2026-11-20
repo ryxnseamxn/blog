@@ -30,21 +30,8 @@
       "favicon": "./assets/images/favicon.png",
       "bundler": "metro"
     },
-    "plugins": [
-      "expo-router",
-      [
-        "expo-splash-screen",
-        {
-          "backgroundColor": "#25292e",
-          "image": "./assets/images/splash-icon.png",
-          "imageWidth": 76
-        }
-      ],
-      "expo-updates"
-    ],
-    "experiments": {
-      "typedRoutes": true,
-      "reactCompiler": true
+    "env": {
+      "EXPO_PUBLIC_API_BASE_URL": "http://10.0.2.2:5000"
     }
   }
 }

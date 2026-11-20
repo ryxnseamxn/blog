@@ -1,6 +1,6 @@
 /**
  * Friendsgiving feature types
- * Shaped for a future .NET/Postgres API
+ * Shaped for the .NET/Postgres API
  */
 
 export interface Gathering {
@@ -17,7 +17,9 @@ export interface DishItem {
   name: string;
   category: DishCategory;
   emoji: string;
-  claimedBy?: Claim | null;
+  claimedBy: string | null; // guest name, or null if unclaimed
+  isClaimed: boolean;
+  claimedAt: string | null; // ISO date string
   isCustom: boolean; // true = added by a guest, false = pre-seeded
   sortOrder: number;
 }

@@ -1,106 +1,106 @@
 import type {
   AddItemRequest,
-  DishCategory,
+  ClaimItemRequest,
   DishItem,
-  Gathering,
-  GatheringWithItems,
+  GatheringWithItems
 } from '@/features/friendsgiving/types';
 
-/**
- * Mock friendsgiving API.
- *
- * Shape mirrors the future .NET API (same endpoints, same response shapes)
- * but is fully local + in-memory for now.
- *
- * When the real backend is ready, swap the bodies of these functions for
- * fetches to your API. Signatures stay identical.
- */
-
-export const FRIENDSGIVING_MENU: {
+export interface ItemDto {
+  id: string;
   name: string;
-  category: DishCategory;
+  category: string;
   emoji: string;
+  isCustom: boolean;
   sortOrder: number;
-}[] = [
-  { name: 'Turkey', category: 'main', emoji: '🦃', sortOrder: 1 },
-  { name: 'Honey Ham', category: 'main', emoji: '🍖', sortOrder: 2 },
-  { name: 'Stuffing', category: 'side', emoji: '🟤', sortOrder: 3 },
-  { name: 'Mashed Potatoes', category: 'side', emoji: '🥔', sortOrder: 4 },
-  { name: 'Gravy', category: 'side', emoji: '🥘', sortOrder: 5 },
-  { name: 'Green Salad', category: 'side', emoji: '🥗', sortOrder: 6 },
-  { name: 'Mac & Cheese', category: 'side', emoji: '🧀', sortOrder: 7 },
-  { name: 'Dinner Rolls', category: 'side', emoji: '🥠', sortOrder: 8 },
-  { name: 'Pies', category: 'dessert', emoji: '🥧', sortOrder: 9 },
-  { name: 'Cookies', category: 'dessert', emoji: '🍪', sortOrder: 10 },
-  { name: 'Eggnog', category: 'drink', emoji: '🥛', sortOrder: 11 },
-  { name: 'Wine', category: 'drink', emoji: '🍷', sortOrder: 12 },
-  { name: 'Crudités', category: 'appetizer', emoji: '🥕', sortOrder: 13 },
-  { name: 'Dip', category: 'appetizer', emoji: '🧆', sortOrder: 14 },
-];
-
-const KNOWN_GATHERINGS: Gathering[] = [
-  {
-    id: 'friendsgiving-2026',
-    name: 'Friendsgiving 2026',
-    date: '2026-11-26T18:00:00',
-    hostName: 'Ryan',
-    location: 'Ryan’s place',
-  },
-];
-
-const delay = (ms = 400) => new Promise<void>((resolve) => setTimeout(resolve, ms));
-
-function itemsFor(gatheringId: string): DishItem[] {
-  const base = FRIENDSGIVING_MENU;
-  const seededClaims: { index: number; guestName: string }[] = [
-    { index: 0, guestName: 'Aunt Linda' },
-    { index: 8, guestName: 'Mom' },
-  ];
-  return base.map((m, i) => {
-    const seed = seededClaims.find((s) => s.index === i);
-    const claimedBy = seed
-      ? { id: `claim-${gatheringId}-item-${i + 1}`, dishItemId: `item-${i + 1}`, guestName: seed.guestName, claimedAt: new Date().toISOString() }
-      : null;
-    return {
-      id: `item-${i + 1}`,
-      gatheringId,
-      name: m.name,
-      category: m.category,
-      emoji: m.emoji,
-      isCustom: false,
-      sortOrder: m.sortOrder,
-      claimedBy,
-    };
-  });
+  isClaimed: boolean;
+  claimedBy?: string;
+  claimedAt?: string;
 }
 
+export interface ClaimedDishDto {
+  id: string;
+  gatheringId: string;
+  name: string;
+  emoji: string;
+  isClaimed: boolean;
+  claimedBy: string;
+  claimedAt: string;
+}
+
+export interface UnclaimResponse {
+  isClaimed: boolean;
+  claimedBy?: string;
+  claimedAt?: string;
+}
+
+const API_BASE_URL: string =
+  (() => {
+    const url = process.env.EXPO_PUBLIC_API_BASE_URL;
+    if (typeof url === 'string' && url !== '') return url;
+    return 'http://localhost:5000';
+})();
+
 export async function getGathering(gatheringId: string): Promise<GatheringWithItems> {
-  await delay();
-  const known = KNOWN_GATHERINGS.find((g) => g.id === gatheringId);
-  const gathering: Gathering = known ?? {
-    id: gatheringId,
-    name: 'Friendsgiving',
-    date: '2026-11-26T18:00:00',
-    hostName: 'Ryan',
-  };
-  const items = itemsFor(gatheringId);
-  return { ...gathering, items };
+  const response = await fetch(`${API_BASE_URL}/api/gatherings/${gatheringId}`);
+  if (!response.ok) throw new Error('Failed to fetch gathering');
+  return await response.json();
+}
+
+export async function claimItem(
+  gatheringId: string,
+  dishItemId: string,
+  claim: ClaimItemRequest
+): Promise<ClaimedDishDto> {
+  const response = await fetch(`${API_BASE_URL}/api/gatherings/${gatheringId}/items/${dishItemId}/claim`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(claim),
+  });
+
+  if (!response.ok) {
+    const error = await response.text();
+    throw new Error(`Claim failed: ${error}`);
+  }
+
+  const data = await response.json();
+  return data as ClaimedDishDto;
+}
+
+export async function unclaimItem(gatheringId: string, dishItemId: string): Promise<UnclaimResponse> {
+  const response = await fetch(`${API_BASE_URL}/api/gatherings/${gatheringId}/items/${dishItemId}/claim`, {
+    method: 'DELETE',
+  });
+
+  if (!response.ok) {
+    const error = await response.text();
+    throw new Error(`Unclaim failed: ${error}`);
+  }
+
+  const data = await response.json();
+  return data as UnclaimResponse;
 }
 
 export async function addItem(
   gatheringId: string,
-  item: AddItemRequest,
+  item: AddItemRequest
 ): Promise<DishItem> {
-  await delay();
-  const created: DishItem = {
-    id: `custom-${Date.now()}`,
-    gatheringId,
-    name: item.name,
-    category: item.category,
-    emoji: item.emoji || '🍽️',
-    isCustom: true,
-    sortOrder: 1000 + itemsFor(gatheringId).length,
-    claimedBy: null,
-  };
-  return created;
+  const response = await fetch(`${API_BASE_URL}/api/gatherings/${gatheringId}/items`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(item),
+  });
+
+  if (!response.ok) {
+    const error = await response.text();
+    throw new Error(`Add item failed: ${error}`);
+  }
+
+  return await response.json();
 }
+
+// Type re-exports for backwards compatibility
+export type { AddItemRequest, ClaimItemRequest, DishCategory, DishItem, Gathering, GatheringWithItems } from '@/features/friendsgiving/types';
