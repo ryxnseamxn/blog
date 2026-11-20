@@ -25,7 +25,7 @@ To use a physical phone with Expo Go, set `LAN_IP` and `EXPO_PUBLIC_API_BASE_URL
 
 The API runs on Railway (see `../friendsgiving-api`). The web app is hosted on EAS Hosting at `https://<slug>.expo.app`.
 
-**Easiest:** run `./scripts/deploy.zsh`. It walks you through everything below and the Railway setup, checking each step and skipping what's already done. Re-run it any time.
+**Easiest:** run `./deploy.zsh` from the folder that holds both repos (one level above this one). It walks you through everything below and the Railway setup, checking each step and skipping what's already done. Re-run it any time.
 
 Manual steps, if you'd rather:
 
