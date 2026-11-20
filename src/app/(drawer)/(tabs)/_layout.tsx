@@ -2,16 +2,44 @@ import React from 'react';
 import { Tabs } from 'expo-router';
 import { useAppTheme } from '@/hooks/use-app-theme';
 import AnimatedTabIcon from '@/components/AnimatedTabIcon';
+import { isRouteEnabled } from '@/config/feature-flags';
 
 const TABS = [
-  { name: 'index', title: 'Home', icon: 'home-outline', activeIcon: 'home' },
-  { name: 'about', title: 'About', icon: 'compass-outline', activeIcon: 'compass' },
-//   { name: 'notifications', title: 'Notifications', icon: 'notifications-outline', activeIcon: 'notifications', badge: true },
-//   { name: 'profile', title: 'Profile', icon: 'person-outline', activeIcon: 'person' },
+  {
+    name: 'index',
+    title: 'Home',
+    icon: 'home-outline',
+    activeIcon: 'home',
+    route: '/',
+  },
+  {
+    name: 'about',
+    title: 'About',
+    icon: 'compass-outline',
+    activeIcon: 'compass',
+    route: '/about',
+  },
+  // {
+  //   name: 'notifications',
+  //   title: 'Notifications',
+  //   icon: 'notifications-outline',
+  //   activeIcon: 'notifications',
+  //   badge: true,
+  //   route: '/notifications',
+  // },
+  // {
+  //   name: 'profile',
+  //   title: 'Profile',
+  //   icon: 'person-outline',
+  //   activeIcon: 'person',
+  //   route: '/profile',
+  // },
 ];
 
 export default function TabsLayout() {
   const { colors, dark, fonts } = useAppTheme();
+
+  const enabledTabs = TABS.filter((tab) => isRouteEnabled(tab.route));
 
   return (
     <Tabs
@@ -36,7 +64,7 @@ export default function TabsLayout() {
         },
       }}
     >
-      {TABS.map((tab) => (
+      {enabledTabs.map((tab) => (
         <Tabs.Screen
           key={tab.name}
           name={tab.name}

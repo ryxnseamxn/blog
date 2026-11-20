@@ -41,6 +41,27 @@ This command will move the starter code to the **example** directory and create 
 - If you'd like to set up unit testing, follow our guide on ["Unit Testing with Jest"](https://docs.expo.dev/develop/unit-testing/)
 - Learn more about the TypeScript setup in this template in our guide on ["Using TypeScript"](https://docs.expo.dev/guides/typescript/)
 
+## Feature flags
+
+Routes are gated behind feature flags defined in `src/config/feature-flags.ts`.
+
+- Flags are keyed 1:1 by screen route path (e.g., `/about`).
+- Defaults to **off** in production; missing keys are treated as off.
+- In development (`__DEV__`), every flag returns **true**, so you can work without toggling flags.
+- When a route is disabled, it is hidden from navigation and redirects to `/`.
+
+To flip a flag in production, just update the value and ship via EAS Update (no store rebuild required):
+
+```bash
+npx eas update --branch production
+```
+
+Run the flag/route 1:1 mapping check (also part of lint):
+
+```bash
+npm run check:flags
+```
+
 ## Learn more
 
 To learn more about developing your project with Expo, look at the following resources:
